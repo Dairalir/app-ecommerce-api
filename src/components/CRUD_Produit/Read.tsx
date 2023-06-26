@@ -8,10 +8,11 @@ interface Produit {
     price: string;
     picture : string;
     stock: number;
+    active : boolean;
     sous_rubrique: [string];
 }
 
-export function ShowProduit(){
+export function ReadProduit(){
     const [produits, setProduits] = useState<Produit[]>([])
 
     const produitData = () => {
@@ -36,8 +37,12 @@ export function ShowProduit(){
             {produits.map(produit =>(
                 <div key={produit.id}>
                     <h3>{produit.name}</h3>
+                    <b>Description :</b>
                     <p>{produit.description}</p>
+                    <b>Quantité :</b>
                     <p>{produit.stock}</p>
+                    <b>Prix :</b>
+                    <p>{produit.price} €</p>
                     <button>Modifier</button>
                     <button>Supprimer</button>
                 </div>
