@@ -1,12 +1,12 @@
 import './App.css'
-import { ShowProduit } from './components/Produit/Produit'
+import { ReadProduit } from './components/CRUD_Produit/Read'
 
 function App() {
 
 
   return (
     <>
-      <ShowProduit/>
+      <ReadProduit/>
     </>
   )
 }
