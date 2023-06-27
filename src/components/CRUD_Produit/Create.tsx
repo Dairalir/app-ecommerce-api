@@ -1,19 +1,9 @@
+import axios from 'axios';
 import { SetStateAction, useEffect, useState } from 'react';
+import { Fournisseur } from '../../interfaces/Fournisseur';
 
-interface Produit {
-    id: number;
-    title: string;
-    description: string;
-    price: string;
-    picture : string;
-    stock: number;
-    active : boolean;
-    sous_rubrique: [string];
-}
 
 export function CreateProduit() {
-
-    const [produits, setProduits] = useState<Produit[]>([])
 
     /*  const [values, setValues] = useState({
         name: '', description: '', price: '', picture: '', stock: 100, active: false, fournisseur: "api/fournisseurs/1", sousRubrique: ["api/sous_rubriques/8"]
@@ -25,24 +15,34 @@ export function CreateProduit() {
     const [picture, setPicture] = useState("")
     const [stock, setStock] = useState(0)
     const [active, setActive] = useState(false)
+    const [fournisseur, setFournisseur] = useState("")
+
+    const [fournisseurs, setFournisseurs] = useState<Fournisseur[]>([])
+
+    useEffect(() => {
+        axios.get(`https://damienvm.amorce.org/api/fournisseurs`)
+            .then((r) => {
+                setFournisseurs(r.data["hydra:member"])
+            })
+    }, [])
 
     const postProduit = () => {
-        fetch(`https://damienvm.amorce.org/api/produits`, {
-            method: 'POST',
-            body: JSON.stringify({
-                name,
-                description,
-                price,
-                picture,
-                stock : 150,
-                active: false,
-                fournisseur : "api/fournisseurs/1",
-                sousRubrique: ["api/sous_rubriques/8"]
-            }),
-            headers : {
-                "Content-Type": "application/json",
-            },
+        axios.post(`https://damienvm.amorce.org/api/produits`, {
+            name,
+            description,
+            price,
+            picture,
+            stock,
+            active,
+            fournisseur: `api/fournisseurs/${fournisseur}`,
+            sousRubrique: ["api/sous_rubriques/8"]
         })
+            .then(() => {
+                alert('Your product was successfully submitted!');
+            })
+            .catch((e) => {
+                alert(`Registration failed! ${e.message}`);
+            });
         setName('');
         setDescription('');
         setPrice('');
@@ -51,12 +51,7 @@ export function CreateProduit() {
 
     const handlePostSubmit = (evt: React.FormEvent<HTMLFormElement>) => {
         evt.preventDefault();
-        try{
-            postProduit();
-            alert('Your product was successfully submitted!');
-        }catch (e){
-            alert(`Registration failed! ${console.error()}`)
-        }
+        postProduit();
     }
     const handleChangeName = (evt: { target: { value: SetStateAction<string>; }; }) => {
         setName(evt.target.value);
@@ -70,11 +65,15 @@ export function CreateProduit() {
     const handleChangePicture = (evt: { target: { value: SetStateAction<string>; }; }) => {
         setPicture(evt.target.value);
     }
-    const handleChangeStock = (evt: { target: { value: SetStateAction<number>; }; }) => {
-        setStock(evt.target.value);
+    const handleChangeStock = (evt: { target: { value: SetStateAction<string>; }; }) => {
+        setStock(Number(evt.target.value));
     }
     const handleChangeActive = (evt: { target: { checked: boolean; }; }) => {
         setActive(evt.target.checked);
+    }
+    const handleChangeFournisseur = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        event.preventDefault();
+        setFournisseur(event.target.value);
     }
 
     return (
@@ -82,17 +81,25 @@ export function CreateProduit() {
             <h1>Ajouter Produit</h1>
             <form onSubmit={handlePostSubmit}>
                 <label>Nom : </label>
-                <input type="text" required value={name} onChange={handleChangeName}/>
+                <input type="text" required value={name} onChange={handleChangeName} />
                 <label>Description : </label>
-                <input type='text-area' value={description} onChange={handleChangeDescription} />
+                <input type='textarea' value={description} onChange={handleChangeDescription} />
                 <label>Prix : </label>
-                <input type="text" required value={price} onChange={handleChangePrice}/>
+                <input type="number" required value={price} onChange={handleChangePrice} />
                 <label>Image : </label>
-                <input type='text' value={picture} onChange={handleChangePicture}/>
-                {/* <label>Stock : </label>
-                <input type="number" value={stock} onChange={handleChangeStock}/> */}
-                {/* <label>Actif : </label>
-                <input type='checkbox' checked={active} onChange={handleChangeActive}/>  */}
+                <input type='text' value={picture} onChange={handleChangePicture} />
+                <label>Stock : </label>
+                <input type="number" value={stock} onChange={handleChangeStock} />
+                <label>Actif : </label>
+                <input type='checkbox' checked={active} onChange={handleChangeActive} />
+                <select onChange={handleChangeFournisseur}>
+                    <option value="">--Please choose an option--</option>
+                    {
+                        fournisseurs.map(fournisseur => (
+                            <option key={fournisseur.id} value={fournisseur.id}>{fournisseur.name}</option>
+                        ))
+                    }
+                </select>
                 <button type='submit'>Confirmer</button>
             </form>
         </div>
