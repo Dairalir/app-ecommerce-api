@@ -33,7 +33,6 @@ export function ReadProduit(){
     return(
         <div>
             <h1>Produits</h1>
-            <button>Ajouter Produit</button>
             {produits.map(produit =>(
                 <div key={produit.id}>
                     <h3>{produit.name}</h3>
@@ -43,8 +42,6 @@ export function ReadProduit(){
                     <p>{produit.stock}</p>
                     <b>Prix :</b>
                     <p>{produit.price} €</p>
-                    <button>Modifier</button>
-                    <button>Supprimer</button>
                 </div>
             ))}
         </div>
