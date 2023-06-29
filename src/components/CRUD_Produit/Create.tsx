@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { SetStateAction, useEffect, useState } from 'react';
 import { Fournisseur } from '../../interfaces/Fournisseur';
+import { SousRubrique } from '../../interfaces/Sous_rubrique';
 
 
 export function CreateProduit() {
@@ -16,6 +17,7 @@ export function CreateProduit() {
     const [stock, setStock] = useState(0)
     const [active, setActive] = useState(false)
     const [fournisseur, setFournisseur] = useState("")
+    const [sousRubrique, setSousRubrique] = useState("")
 
     const [fournisseurs, setFournisseurs] = useState<Fournisseur[]>([])
 
@@ -23,6 +25,15 @@ export function CreateProduit() {
         axios.get(`https://damienvm.amorce.org/api/fournisseurs`)
             .then((r) => {
                 setFournisseurs(r.data["hydra:member"])
+            })
+    }, [])
+
+    const [sousRubriques, setSousRubriques] = useState<SousRubrique[]>([])
+
+    useEffect(() => {
+        axios.get(`https://damienvm.amorce.org/api/sous_rubriques`)
+            .then((r) => {
+                setSousRubriques(r.data["hydra:member"])
             })
     }, [])
 
@@ -35,15 +46,15 @@ export function CreateProduit() {
             stock,
             active,
             fournisseur: `api/fournisseurs/${fournisseur}`,
-            sousRubrique: ["api/sous_rubriques/8"]
+            sousRubrique: [`api/sous_rubriques/${sousRubrique}`]
         })
             .then(() => {
                 alert('Your product was successfully submitted!');
             })
             .catch((e) => {
-                alert(`Registration failed! ${e.message}`);
+                alert(`Product submit failed! ${e.message}`);
             });
-        setName('');
+        setName(''); 0.
         setDescription('');
         setPrice('');
         setPicture('');
@@ -75,6 +86,10 @@ export function CreateProduit() {
         event.preventDefault();
         setFournisseur(event.target.value);
     }
+    const handleChangeSousRubrique = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        event.preventDefault();
+        setSousRubrique(event.target.value);
+    }
 
     return (
         <div>
@@ -92,11 +107,21 @@ export function CreateProduit() {
                 <input type="number" value={stock} onChange={handleChangeStock} />
                 <label>Actif : </label>
                 <input type='checkbox' checked={active} onChange={handleChangeActive} />
+                <label>Fournisseurs : </label>
                 <select onChange={handleChangeFournisseur}>
-                    <option value="">--Please choose an option--</option>
+                    <option >--Please choose an option--</option>
                     {
                         fournisseurs.map(fournisseur => (
                             <option key={fournisseur.id} value={fournisseur.id}>{fournisseur.name}</option>
+                        ))
+                    }
+                </select>
+                <label>Sous-Rubriques : </label>
+                <select onChange={handleChangeSousRubrique} multiple>
+                    <option >--Please choose an option--</option>
+                    {
+                        sousRubriques.map(sousRubrique => (
+                            <option key={sousRubrique.id} value={sousRubrique.id}>{sousRubrique.name}</option>
                         ))
                     }
                 </select>
