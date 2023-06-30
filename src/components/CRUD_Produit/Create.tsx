@@ -54,7 +54,7 @@ export function CreateProduit() {
             .catch((e) => {
                 alert(`Product submit failed! ${e.message}`);
             });
-        setName(''); 0.
+        setName('');
         setDescription('');
         setPrice('');
         setPicture('');
