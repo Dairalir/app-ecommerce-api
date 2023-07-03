@@ -1,6 +1,5 @@
 import axios from "axios";
 import { SetStateAction, useEffect, useState } from 'react';
-import { Produit } from "../../interfaces/Produit";
 import { Fournisseur } from "../../interfaces/Fournisseur";
 import { SousRubrique } from "../../interfaces/Sous_rubrique";
 import { useParams } from "react-router-dom";

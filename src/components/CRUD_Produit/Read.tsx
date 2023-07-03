@@ -28,7 +28,7 @@ export function ReadProduit() {
     const produitDelete = (id: number) => {
         axios.delete(`https://damienvm.amorce.org/api/produits/${id}`)
             .then(() => {
-                alert(`Produit ${id} supprimer`);
+                alert(`Produit ${id} supprimé`);
             })
             .catch(error => {
                 console.error(error);
