@@ -3,7 +3,6 @@ import './App.css'
 import { CreateProduit } from './components/CRUD_Produit/Create'
 import { ReadProduit } from './components/CRUD_Produit/Read'
 import { UpdateProduit } from './components/CRUD_Produit/Update'
-import { Delete } from './components/CRUD_Produit/Delete'
 
 function App() {
 
@@ -18,8 +17,7 @@ function App() {
       <Routes>
         <Route path="create" element={<CreateProduit />} />
         <Route path="read" element={<ReadProduit />} />
-        <Route path="update" element={<UpdateProduit />} />
-        <Route path="delete" element={<Delete />} />
+        <Route path="update/:id" element={<UpdateProduit />} />
       </Routes>
     </>
   )

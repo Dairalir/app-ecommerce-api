@@ -3,6 +3,7 @@ import { SetStateAction, useEffect, useState } from 'react';
 import { Produit } from "../../interfaces/Produit";
 import { Fournisseur } from "../../interfaces/Fournisseur";
 import { SousRubrique } from "../../interfaces/Sous_rubrique";
+import { useParams } from "react-router-dom";
 
 export function UpdateProduit() {
 
@@ -13,29 +14,49 @@ export function UpdateProduit() {
     const [stock, setStock] = useState(0)
     const [active, setActive] = useState(false)
     const [fournisseur, setFournisseur] = useState("")
-    const [sousRubrique, setSousRubrique] = useState("")
+    const [sousRubrique, setSousRubrique] = useState<string[]>([])
 
-    const [produits, setProduits] = useState<Produit[]>([])
     const [fournisseurs, setFournisseurs] = useState<Fournisseur[]>([])
+    useEffect(() => {
+        axios.get(`https://damienvm.amorce.org/api/fournisseurs`)
+            .then((r) => {
+                setFournisseurs(r.data["hydra:member"])
+            })
+    }, [])
     const [sousRubriques, setSousRubriques] = useState<SousRubrique[]>([])
+    useEffect(() => {
+        axios.get(`https://damienvm.amorce.org/api/sous_rubriques`)
+            .then((r) => {
+                setSousRubriques(r.data["hydra:member"])
+            })
+    }, [])
+
+    let { id } = useParams();
 
     useEffect(() => {
-        axios.get(`https://damienvm.amorce.org/api/produits`)
+        axios.get(`https://damienvm.amorce.org/api/produits/${id}`)
             .then((r) => {
-                setProduits(r.data["hydra:member"])
+                setName(r.data.name);
+                setDescription(r.data.description);
+                setPrice(r.data.price);
+                setPicture(r.data.picture);
+                setStock(r.data.stock);
+                setActive(r.data.active);
+                setFournisseur(r.data.fournisseur);
+                setSousRubrique(r.data.sousRubrique)
             })
     }, [])
 
     const updateProduit = () => {
-        axios.put(`https://damienvm.amorce.org/api/produits`, {
-            name: '',
-            description: '',
-            price: '',
-            picture: '',
-            stock: '',
-            active: '',
-            fournisseur: `api/fournisseurs/${fournisseur}`,
-            sousRubrique: [`api/sous_rubriques/${sousRubrique}`]
+        axios.put(`https://damienvm.amorce.org/api/produits/${id}`, {
+            name,
+            description,
+            price,
+            picture,
+            stock,
+            active,
+            fournisseur: fournisseur,
+            sousRubrique: sousRubrique
         })
             .then(() => {
                 alert('Your product was successfully updated!');
@@ -45,10 +66,14 @@ export function UpdateProduit() {
             });
     }
 
-    // const handlePostSubmit = (evt: React.FormEvent<HTMLFormElement>) => {
-    //     evt.preventDefault();
-    //     postProduit();
-    // }
+    // useEffect(() = {
+    //     updateProduit()
+    // }, [])
+
+    const handlePostSubmit = (evt: React.FormEvent<HTMLFormElement>) => {
+        evt.preventDefault();
+        updateProduit();
+    }
     const handleChangeName = (evt: { target: { value: SetStateAction<string>; }; }) => {
         setName(evt.target.value);
     }
@@ -73,13 +98,19 @@ export function UpdateProduit() {
     }
     const handleChangeSousRubrique = (event: React.ChangeEvent<HTMLSelectElement>) => {
         event.preventDefault();
-        setSousRubrique(event.target.value);
+        console.log(event.target.value);
+        if (sousRubrique.includes(event.target.value)) {
+            setSousRubrique(sousRubrique.filter(e => e != event.target.value));
+        } else {
+            setSousRubrique([...sousRubrique, event.target.value]);
+        }
+
     }
 
     return (
         <div>
             UPDATE
-            <form>
+            <form onSubmit={handlePostSubmit}>
                 <label>Nom : </label>
                 <input type="text" required value={name} onChange={handleChangeName} />
                 <label>Description : </label>
@@ -93,20 +124,20 @@ export function UpdateProduit() {
                 <label>Actif : </label>
                 <input type='checkbox' checked={active} onChange={handleChangeActive} />
                 <label>Fournisseurs : </label>
-                <select onChange={handleChangeFournisseur}>
+                <select onChange={handleChangeFournisseur} value={fournisseur}>
                     <option >--Please choose an option--</option>
                     {
                         fournisseurs.map(fournisseur => (
-                            <option key={fournisseur.id} value={fournisseur.id}>{fournisseur.name}</option>
+                            <option key={fournisseur.id} value={`/api/fournisseurs/${fournisseur.id}`}>{fournisseur.name}</option>
                         ))
                     }
                 </select>
                 <label>Sous-Rubriques : </label>
-                <select onChange={handleChangeSousRubrique} multiple>
+                <select onChange={handleChangeSousRubrique} multiple value={sousRubrique}>
                     <option >--Please choose an option--</option>
                     {
                         sousRubriques.map(sousRubrique => (
-                            <option key={sousRubrique.id} value={sousRubrique.id}>{sousRubrique.name}</option>
+                            <option key={sousRubrique.id} value={`/api/sous_rubriques/${sousRubrique.id}`}>{sousRubrique.name}</option>
                         ))
                     }
                 </select>
