@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 
 interface Produit {
@@ -39,6 +40,8 @@ export function ReadProduit() {
                     <p>{produit.stock}</p>
                     <b>Prix :</b>
                     <p>{produit.price} €</p>
+                    <Link to={`/update/${produit.id}`}>Modifier</Link>
+                    <Link to={`/delete/${produit.id}`}>Supprimer</Link>
                 </div>
             ))}
         </div>

@@ -45,10 +45,10 @@ export function UpdateProduit() {
             });
     }
 
-    const handlePostSubmit = (evt: React.FormEvent<HTMLFormElement>) => {
-        evt.preventDefault();
-        postProduit();
-    }
+    // const handlePostSubmit = (evt: React.FormEvent<HTMLFormElement>) => {
+    //     evt.preventDefault();
+    //     postProduit();
+    // }
     const handleChangeName = (evt: { target: { value: SetStateAction<string>; }; }) => {
         setName(evt.target.value);
     }
@@ -78,6 +78,7 @@ export function UpdateProduit() {
 
     return (
         <div>
+            UPDATE
             <form>
                 <label>Nom : </label>
                 <input type="text" required value={name} onChange={handleChangeName} />
