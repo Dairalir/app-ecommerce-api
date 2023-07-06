@@ -108,7 +108,6 @@ export function UpdateProduit() {
 
     return (
         <div>
-            UPDATE
             <form onSubmit={handlePostSubmit}>
                 <label>Nom : </label>
                 <input type="text" required value={name} onChange={handleChangeName} />
