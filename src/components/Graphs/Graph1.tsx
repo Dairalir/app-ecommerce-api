@@ -1,19 +1,38 @@
+import axios from "axios";
 import { useState } from "react";
 import { Chart } from "react-google-charts";
 
 export function Graph1() {
 
+
+    const CAMois = () => {
+        axios.get(`https://damienvm.amorce.org/api/commandes`)
+            .then((r) => {
+                setData(r.data["hydra:member"])
+            })
+    }
+
     const [data, setData] = useState([
-        ["Evénements", "Nombre"],
-        ["Tertiaire", 11],
-        ["Batiment", 3],
-        ["Industrie", 7]
+        ["Mois", "CA"],
+        ["Janvier", 11],
+        ["Février", 3],
+        ["Mars", 7],
+        ["Avril", 7],
+        ["Mai", 7],
+        ["Juin", 7],
+        ["Juillet", 7],
+        ["Aout", 7],
+        ["Septembre", 7],
+        ["Octobre", 7],
+        ["Novembre", 7],
+        ["Décembre", 7],
+
     ]);
     const [data1, setData1] = useState([
-        ["Evénements", "Nombre"],
-        ["Tertiaire", 11],
-        ["Batiment", 3],
-        ["Industrie", 7]
+        ["Fournisseur", "CA"],
+        ["Fournisseur1", 11],
+        ["Fournisseur2", 3],
+        ["Fournisseur3", 7]
     ]);
 
 
